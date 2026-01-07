@@ -1,0 +1,83 @@
+from enums.player import Player
+from enums.cell_type import CellType
+from models.state import State
+from models.grid import Grid
+
+class Rules:
+    @staticmethod
+    def pieces_on_board(state: State, player: Player) -> int:
+        return len(state.grid.cells_of_player(player))
+    
+    @staticmethod
+    def pieces_finished(state: State, player: Player) -> int:
+        return 7 - Rules.pieces_on_board(state, player)
+
+    @staticmethod
+    def is_win(state: State, player: Player) -> bool:
+        return Rules.pieces_on_board(state, player) == 0
+    
+    @staticmethod
+    def winner(state: State) -> Player | None:
+        if Rules.is_win(state, Player.Black): return Player.Black
+        if Rules.is_win(state, Player.White): return Player.White
+    
+    @staticmethod
+    def is_terminal(state: State) -> bool:
+        return Rules.winner(state) is not None
+        
+    @staticmethod
+    def _can_leave(state: State, position: int) -> bool:
+        cell_type = state.grid.get_type(position)
+
+        if cell_type == CellType.HAPPINESS:
+            return state.step == 5
+        
+        if cell_type == CellType.THREE_TRUTHS:
+            return state.step == 3
+
+        if cell_type == CellType.RE_ATOUM:
+            return state.step == 2
+
+        return cell_type == CellType.HORUS
+    
+    @staticmethod
+    def _is_legal_move(state: State, position: int) -> bool:
+        hap_pos = state.grid.cells_of_type(CellType.HAPPINESS)[0]
+        to_pos = position + state.step
+
+        if position == hap_pos: return True
+
+        if position > hap_pos: return Rules._can_leave(state, position)
+
+        if position < hap_pos and to_pos > hap_pos: return False
+
+        return state.grid.get_player(to_pos) != state.player  
+
+    @staticmethod
+    def legal_moves(state: State) -> list[int]:
+        return [pos for pos in state.grid.cells_of_player(state.player) if Rules._is_legal_move(state, pos)]
+                
+    @staticmethod
+    def rebirth_illegal_pieces(grid: Grid, player: Player, last_move: int | None = None) -> Grid:
+        for pos in grid.cells_of_player(player):
+            if grid.get_type(pos) == CellType.WATER:
+                return grid.rebirth(pos)
+
+            if pos != last_move and grid.get_type(pos) in (
+                CellType.THREE_TRUTHS,
+                CellType.RE_ATOUM,
+                CellType.HORUS):
+                return grid.rebirth(pos)
+
+        return grid
+
+    @staticmethod
+    def apply_move(state: State, position: int) -> State:
+        if Rules._can_leave(state, position):
+            new_grid = state.grid.move(position, None)
+        else:
+            to_pos = position + state.step
+            new_grid = state.grid.move(position, to_pos)
+            new_grid = Rules.rebirth_illegal_pieces(new_grid, state.player, to_pos)
+
+        return state.copy_with(grid=new_grid)
