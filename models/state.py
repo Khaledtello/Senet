@@ -25,3 +25,15 @@ class State:
             self.player if player is None else player,
             self.step if step is None else step,
         )
+    
+    def __eq__(self, value):
+        if not isinstance(value, State): return False
+        
+        return (
+            self.grid == value.grid and
+            self.player == value.player and
+            self.step == value.step
+        )
+    
+    def __hash__(self):
+        return hash((self.grid, self.player, self.step))

@@ -4,6 +4,18 @@ from models.state import State
 from models.grid import Grid
 
 class Rules:
+    _step_probability = {
+        1: 4/16,
+        2: 6/16,
+        3: 4/16,
+        4: 1/16,
+        5: 1/16,
+    }
+
+    @staticmethod
+    def all_steps():
+        return Rules._step_probability.copy().items()
+    
     @staticmethod
     def pieces_on_board(state: State, player: Player) -> int:
         return len(state.grid.cells_of_player(player))
@@ -58,7 +70,7 @@ class Rules:
         return [pos for pos in state.grid.cells_of_player(state.player) if Rules._is_legal_move(state, pos)]
                 
     @staticmethod
-    def rebirth_illegal_pieces(grid: Grid, player: Player, last_move: int | None = None) -> Grid:
+    def _rebirth_illegal_pieces(grid: Grid, player: Player, last_move: int | None = None) -> Grid:
         for pos in grid.cells_of_player(player):
             if grid.get_type(pos) == CellType.WATER:
                 return grid.rebirth(pos)
@@ -78,6 +90,20 @@ class Rules:
         else:
             to_pos = position + state.step
             new_grid = state.grid.move(position, to_pos)
-            new_grid = Rules.rebirth_illegal_pieces(new_grid, state.player, to_pos)
+            new_grid = Rules._rebirth_illegal_pieces(new_grid, state.player, to_pos)
 
         return state.copy_with(grid=new_grid)
+    
+    @staticmethod
+    def skip_move(state: State):
+        return state.copy_with(grid=Rules._rebirth_illegal_pieces(state.grid, state.player))
+    
+    @staticmethod
+    def successors(state: State):
+        moves = Rules.legal_moves(state)
+        player = state.player.opposite()
+        
+        if not moves:
+            return [(Rules.skip_move(state).copy_with(player=player), None)]
+        
+        return [(Rules.apply_move(state, move).copy_with(player=player), move) for move in moves]

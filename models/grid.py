@@ -2,16 +2,17 @@ from enums.cell_type import CellType
 from enums.player import Player
 
 class Grid:
-    def __init__(self, cells: list[Player] = None):
+    _special_cells = {
+        14: CellType.REBIRTH,
+        25: CellType.HAPPINESS,
+        26: CellType.WATER,
+        27: CellType.THREE_TRUTHS,
+        28: CellType.RE_ATOUM,
+        29: CellType.HORUS,
+    }
+    
+    def __init__(self, cells: list[Player | None] | None = None):
         self._cells = [None] * 30 if cells == None else cells
-        self._special_cells = {
-            14: CellType.REBIRTH,
-            25: CellType.HAPPINESS,
-            26: CellType.WATER,
-            27: CellType.THREE_TRUTHS,
-            28: CellType.RE_ATOUM,
-            29: CellType.HORUS,
-        }
 
     def get_player(self, position: int) -> Player:
         return self._cells[position]
@@ -60,6 +61,13 @@ class Grid:
             if self.get_player(to_pos) is None:
                 return self.move(from_pos, to_pos)
         return self
+    
+    def __eq__(self, value):
+        if not isinstance(value, Grid): return False
+        return self._cells == value._cells
+    
+    def __hash__(self):
+        return hash(tuple(self._cells))
 
     def __str__(self):
         lines = []

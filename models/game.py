@@ -13,11 +13,7 @@ class Game:
     
     @staticmethod
     def _switch_player(state: State) -> State:
-        return state.copy_with(player=Player.Black if state.player == Player.White else Player.White)
-    
-    @staticmethod
-    def _pass(state: State) -> State:
-        return state.copy_with(grid=Rules.rebirth_illegal_pieces(state.grid, state.player))
+        return state.copy_with(player=state.player.opposite())
     
     @staticmethod
     def run(mode: Mode, state: State):
@@ -28,10 +24,10 @@ class Game:
             if state.player == Player.Black or mode == Mode.Human:
                 move = ConsoleUI.choose_move(Rules.legal_moves(state))
             else:
-                move = ConsoleUI.ai_move(Rules.legal_moves(state))
+                move = ConsoleUI.ai_move(state, 4)
 
             if move is None:
-                state = Game._pass(state)
+                state = Rules.skip_move(state)
             else:
                 state = Rules.apply_move(state, move)
 
