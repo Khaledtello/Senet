@@ -11,15 +11,15 @@ class ConsoleUI:
         print("\033[1m")
         print("=" * 50)
         print(" " * 22 + "SENET")
-        print("=" * 50)
+        print("=" * 50 + "\n")
 
     @staticmethod
     def choose_mode() -> Mode:
-        print("1. Human vs Human")
-        print("2. Human vs AI")
+        for mode in (Mode):
+            print(f"{mode.value+1}. Human vs {mode.name()}")
 
-        mode = int(input("\nSelect Mode: "))
-        return Mode.AI if mode == 2 else Mode.Human
+        choose = int(input("\nSelect Mode: "))
+        return [mode for mode in Mode if mode.value == choose-1][0]
     
     @staticmethod
     def show_state(state: State) -> None:

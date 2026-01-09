@@ -2,4 +2,16 @@ from enum import Enum
 
 class Mode(Enum):
     Human = 0
-    AI = 1
+    AI_1 = 1
+    AI_2 = 2
+    AI_3 = 3
+    AI_4 = 4
+
+    def name(self):
+        return {
+            Mode.Human: "Human",
+            Mode.AI_1: "Easy AI",
+            Mode.AI_2: "Medium AI",
+            Mode.AI_3: "Hard AI",
+            Mode.AI_4: "Expert AI",
+        }.get(self, Mode.Human)

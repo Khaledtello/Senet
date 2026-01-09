@@ -24,7 +24,7 @@ class Game:
             if state.player == Player.Blue or mode == Mode.Human:
                 move = ConsoleUI.choose_move(Rules.legal_moves(state))
             else:
-                move = ConsoleUI.ai_move(state, 4)
+                move = ConsoleUI.ai_move(state, mode.value)
 
             if move is None:
                 state = Rules.skip_move(state)
@@ -33,4 +33,5 @@ class Game:
 
             state = Game._switch_player(state)
 
+        ConsoleUI.show_state(state)
         ConsoleUI.show_winner(Rules.winner(state))
