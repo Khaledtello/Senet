@@ -11,9 +11,9 @@ class Exminimax:
     def _evaluation_of(state: State, player: Player) -> int:
         result = 0
         for pos in state.grid.cells_of_player(player):
-            result += (22*22*22 if pos == 24 else pos*pos*pos)
+            result += (22*22 if pos == 24 else pos*pos)
             
-        result += Rules.pieces_finished(state, player) * 35*35*35*35
+        result += Rules.pieces_finished(state, player) * 2000
         return result
 
     @staticmethod
@@ -54,7 +54,7 @@ class Exminimax:
         cache[key] = 0
 
         for step, probability in Rules.all_steps():
-            best_score = sys.maxsize * 1 if maximize else -1
+            best_score = sys.maxsize * -1 if maximize else 1
             fun = max if maximize else min
 
             for child, _ in Rules.successors(state.copy_with(step=step)):
