@@ -30,8 +30,8 @@ class Rules:
     
     @staticmethod
     def winner(state: State) -> Player | None:
-        if Rules.is_win(state, Player.Black): return Player.Black
-        if Rules.is_win(state, Player.White): return Player.White
+        if Rules.is_win(state, Player.Blue): return Player.Blue
+        if Rules.is_win(state, Player.Red): return Player.Red
     
     @staticmethod
     def is_terminal(state: State) -> bool:

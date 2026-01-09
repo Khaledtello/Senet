@@ -5,8 +5,8 @@ class CellType(Enum):
     REBIRTH = "R"
     HAPPINESS = "H"
     WATER = "~"
-    THREE_TRUTHS = "3"
-    RE_ATOUM = "2"
+    THREE_TRUTHS = "T"
+    RE_ATOUM = "A"
     HORUS = "*"
 
     def symbol(self):

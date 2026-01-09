@@ -1,14 +1,18 @@
 from enum import Enum
+from colorama import Fore
 
 class Player(Enum):
-    Black = "B"
-    White = "W"
-
+    Blue = "B"
+    Red = "R"
+    
+    def opposite(self) -> "Player":
+        return Player.Blue if self == Player.Red else Player.Red
+    
     def symbol(self):
         return self.value
     
     def name(self):
-        return "BLACK" if self == self.Black else "WHITE"
+        return "BLUE" if self == self.Blue else "RED"
     
-    def opposite(self) -> "Player":
-        return Player.Black if self == Player.White else Player.White
+    def color(self):
+        return Fore.BLUE if self == Player.Blue else Fore.RED

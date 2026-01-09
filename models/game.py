@@ -21,7 +21,7 @@ class Game:
             state = Game._generate_step(state)
 
             ConsoleUI.show_state(state)
-            if state.player == Player.Black or mode == Mode.Human:
+            if state.player == Player.Blue or mode == Mode.Human:
                 move = ConsoleUI.choose_move(Rules.legal_moves(state))
             else:
                 move = ConsoleUI.ai_move(state, 4)

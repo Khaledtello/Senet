@@ -36,7 +36,7 @@ class Grid:
     def initial() -> "Grid":
         grid = Grid()
         for i in range(14):
-            grid._set_player(i, Player.Black if i % 2 else Player.White)
+            grid._set_player(i, Player.Blue if i % 2 else Player.Red)
 
         return grid
     
@@ -68,22 +68,3 @@ class Grid:
     
     def __hash__(self):
         return hash(tuple(self._cells))
-
-    def __str__(self):
-        lines = []
-
-        for row in range(3):
-            line = []
-            for col in range(10):
-                position = row * 10 + (9 - col if row == 1 else col)
-
-                player = self.get_player(position)
-                player_char = " " if player == None else player.symbol()
-
-                cell_type = self.get_type(position)
-
-                line.append(f"[{position:02d}|{player_char}|{cell_type.symbol()}]")
-
-            lines.append(" ".join(line))
-
-        return "\n".join(lines)
