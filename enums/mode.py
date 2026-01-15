@@ -15,3 +15,7 @@ class Mode(Enum):
             Mode.AI_3: "Hard AI",
             Mode.AI_4: "Expert AI",
         }.get(self, Mode.Human)
+    
+    def get_by_value(value: int) -> "Mode":
+        modes = [mode for mode in Mode if mode.value == value]
+        return Mode.Human if modes is None else modes[0]
