@@ -2,7 +2,7 @@ from dataclasses import dataclass
 
 @dataclass
 class MoveNode:
-    isMax: bool
+    maximize: bool
     move: int | None
     value: float
     children: list["ChanceNode"]

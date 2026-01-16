@@ -97,7 +97,7 @@ class ConsoleUI:
     
     def _debug_ai(node: MoveNode | ChanceNode, indent=1):
         if isinstance(node, MoveNode):
-            node_type = "MAX" if node.isMax else "MIN"
+            node_type = "MAX" if node.maximize else "MIN"
             print(f"{node_type} chose move {node.move} → value = {node.value:.2f}")
             chosen = next(n for n in node.children if n.value == node.value)
             ConsoleUI._debug_ai(chosen, indent)
@@ -122,7 +122,7 @@ class ConsoleUI:
             print(f"{prefix}LEAF value = {node.value:.2f}")
 
         elif isinstance(node, MoveNode):
-            node_type = "MAX" if node.isMax else "MIN"
+            node_type = "MAX" if node.maximize else "MIN"
             print(f"{node_type} chose move {node.move} → value = {node.value:.2f}")
 
         else:
