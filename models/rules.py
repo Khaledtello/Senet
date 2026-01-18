@@ -73,23 +73,23 @@ class Rules:
     def _rebirth_illegal_pieces(grid: Grid, player: Player, last_move: int | None = None) -> Grid:
         for pos in grid.cells_of_player(player):
             if grid.get_type(pos) == CellType.WATER:
-                return grid.rebirth(pos)
+                return grid.rebirth_piece(pos)
 
             if pos != last_move and grid.get_type(pos) in (
                 CellType.THREE_TRUTHS,
                 CellType.RE_ATOUM,
                 CellType.HORUS):
-                return grid.rebirth(pos)
+                return grid.rebirth_piece(pos)
 
         return grid
 
     @staticmethod
     def apply_move(state: State, position: int) -> State:
         if Rules._can_leave(state, position):
-            new_grid = state.grid.move(position, None)
+            new_grid = state.grid.move_piece(position, None)
         else:
             to_pos = position + state.step
-            new_grid = state.grid.move(position, to_pos)
+            new_grid = state.grid.move_piece(position, to_pos)
             new_grid = Rules._rebirth_illegal_pieces(new_grid, state.player, to_pos)
 
         return state.copy_with(grid=new_grid)

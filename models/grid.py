@@ -43,7 +43,7 @@ class Grid:
     def copy(self) -> "Grid":
         return Grid(self._cells.copy())
     
-    def move(self, from_pos: int, to_pos: int | None) -> "Grid":
+    def move_piece(self, from_pos: int, to_pos: int | None) -> "Grid":
         new_grid = self.copy()
         if to_pos is None:
             new_grid._set_player(from_pos, None)
@@ -55,11 +55,11 @@ class Grid:
         new_grid._set_player(from_pos, to_player)
         return new_grid
 
-    def rebirth(self, from_pos: int) -> "Grid":
+    def rebirth_piece(self, position: int) -> "Grid":
         reb_pos = self.cells_of_type(CellType.REBIRTH)[0]
         for to_pos in range(reb_pos, -1, -1):
             if self.get_player(to_pos) is None:
-                return self.move(from_pos, to_pos)
+                return self.move_piece(position, to_pos)
         return self
     
     def __eq__(self, value):
