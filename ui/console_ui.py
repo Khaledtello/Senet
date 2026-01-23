@@ -43,8 +43,8 @@ class ConsoleUI:
 
             print(Fore.RESET + "|")
 
-        print(f"{Fore.BLUE}{state.player.name()}   : {Rules.pieces_finished(state, Player.Blue)}")
-        print(f"{Fore.RED}{state.player.name()}    : {Rules.pieces_finished(state, Player.Red)}")
+        print(f"{Fore.BLUE}{Player.Blue.name()}   : {Rules.pieces_finished(state, Player.Blue)}")
+        print(f"{Fore.RED}{Player.Red.name()}    : {Rules.pieces_finished(state, Player.Red)}")
         print(f"{Fore.RESET}Player : {state.player.color()}{state.player.name()}")
         print(f"{Fore.RESET}Step   : {state.step}")
         print("=" * 51)
@@ -94,43 +94,22 @@ class ConsoleUI:
         print(f"AI choose: {move_node.move}")
 
         return move_node.move
-    
-    def _debug_ai(node: MoveNode | ChanceNode, indent=1):
-        if isinstance(node, MoveNode):
-            node_type = "MAX" if node.maximize else "MIN"
-            print(f"{node_type} chose move {node.move} → value = {node.value:.2f}")
-            chosen = next(n for n in node.children if n.value == node.value)
-            ConsoleUI._debug_ai(chosen, indent)
-            return
 
+    def _debug_ai(node: MoveNode | ChanceNode, indent=0):
         prefix = "  " * indent
-    
-        if node.children is None:
-            print(f"{prefix}LEAF value = {node.value:.2f}")
-            return
 
-        print(f"{prefix}CHANCE expected = {node.value:.2f}")
-
-        for i, child in enumerate(node.children, 1):
-            print(f"{prefix}  step {i}: ", end="")
-            ConsoleUI._debug_ai(child, indent+2)
-
-    def _debug_ai2(node: MoveNode | ChanceNode, indent=1):
-        prefix = "  " * indent
+        print(prefix, end="")
         
         if node.children is None:
-            print(f"{prefix}LEAF value = {node.value:.2f}")
+            print(f"LEAF value = {node.value:.2f}")
+            return
 
-        elif isinstance(node, MoveNode):
+        if isinstance(node, MoveNode):
             node_type = "MAX" if node.maximize else "MIN"
             print(f"{node_type} chose move {node.move} → value = {node.value:.2f}")
 
         else:
-            print(f"{prefix}CHANCE expected = {node.value:.2f}")
-            indent += 2
+            print(f"CHANCE expected = {node.value:.2f}")
 
-        if node.children is not None:
-            for i, child in enumerate(node.children, 1):
-                if isinstance(node, ChanceNode):
-                    print(f"{prefix}  step {i}: ", end="")
-                ConsoleUI._debug_ai2(child, indent)
+        for child in node.children:
+            ConsoleUI._debug_ai(child, indent+2)

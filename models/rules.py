@@ -96,7 +96,8 @@ class Rules:
     
     @staticmethod
     def skip_move(state: State):
-        return state.copy_with(grid=Rules._rebirth_illegal_pieces(state.grid, state.player))
+        new_gird = Rules._rebirth_illegal_pieces(state.grid, state.player)
+        return state.copy_with(grid=new_gird)
     
     @staticmethod
     def successors(state: State):
