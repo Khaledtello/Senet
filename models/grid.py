@@ -45,10 +45,13 @@ class Grid:
     
     def move_piece(self, from_pos: int, to_pos: int | None) -> "Grid":
         new_grid = self.copy()
+
+        # Remove piece
         if to_pos is None:
             new_grid._set_player(from_pos, None)
             return new_grid
 
+        # Switch between pieces
         from_player = new_grid.get_player(from_pos)
         to_player = new_grid.get_player(to_pos)
         new_grid._set_player(to_pos, from_player)

@@ -75,6 +75,7 @@ class Rules:
             if grid.get_type(pos) == CellType.WATER:
                 return grid.rebirth_piece(pos)
 
+            # Rebirth piece standing on special cells except the last moved one
             if pos != last_move and grid.get_type(pos) in (
                 CellType.THREE_TRUTHS,
                 CellType.RE_ATOUM,
@@ -102,9 +103,17 @@ class Rules:
     @staticmethod
     def successors(state: State):
         moves = Rules.legal_moves(state)
-        player = state.player.opposite()
+        opposite = state.player.opposite()
         
         if not moves:
-            return [(Rules.skip_move(state).copy_with(player=player), None)]
+            skipped_state = Rules.skip_move(state)
+            switched_player_state = skipped_state.copy_with(player=opposite)
+            return [(switched_player_state, None)]
         
-        return [(Rules.apply_move(state, move).copy_with(player=player), move) for move in moves]
+        states = []
+        for move in moves:
+            moved_state = Rules.apply_move(state, move)
+            switched_player_state = moved_state.copy_with(player=opposite)
+            states.append((switched_player_state, move))
+
+        return states

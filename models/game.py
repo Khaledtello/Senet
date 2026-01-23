@@ -9,7 +9,8 @@ class Game:
     @staticmethod
     def _generate_step(state: State) -> State:
         step = sum(random.choice((0, 1)) for _ in range(4))
-        return state.copy_with(step=(5 if step == 0 else step))
+        step = 5 if step == 0 else step
+        return state.copy_with(step=step)
     
     @staticmethod
     def _switch_player(state: State) -> State:
